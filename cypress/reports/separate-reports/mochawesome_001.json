@@ -1,0 +1,128 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 2,
+    "passes": 1,
+    "pending": 0,
+    "failures": 1,
+    "start": "2020-01-09T15:27:17.416Z",
+    "end": "2020-01-09T15:27:54.553Z",
+    "duration": 37137,
+    "testsRegistered": 2,
+    "passPercent": 50,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "280bdc9b-cf4a-463d-84cc-06eb47701522",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "81c4982e-3c16-450b-9f4a-c850c41b5b30",
+          "title": "Company Direct Message",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "Direct message to multiple company users",
+              "fullTitle": "Company Direct Message Direct message to multiple company users",
+              "timedOut": null,
+              "duration": 17251,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.server();\ncy.route('GET', '**/v1/drafts').as('login');\ncy.route('GET', '**/v1/rooms?**').as('room');\ncy.loginCompany(Cypress.env('company_admin'), Cypress.env('company_admin_password'));\ncy.wait('@login', {\n  timeout: 60000\n}).its('status').should('equal', 200);\ncy.wait('@room', {\n  timeout: 60000\n}).its('status').should('equal', 200);\ncy.get(\"div[class^='DirectMessageMenu']\").click();\ncy.get(\"div[role='tab']\").contains('Company Users').click();\nvar roomName = '';\ncy.get(\".ant-tabs-tabpane-active div[class^='Candidate_avatar'] ~ div\").within(function () {\n  cy.get('h5').eq(0).then(function (ele) {\n    roomName = ele.text() + ', ';\n    ele.click();\n  });\n  cy.get('h5').eq(1).then(function (ele) {\n    roomName += ele.text() + ', ';\n    ele.click();\n  });\n  cy.get('h5').eq(2).then(function (ele) {\n    roomName += ele.text() + ', ';\n    ele.click();\n  });\n  cy.get('h5').eq(3).then(function (ele) {\n    roomName += ele.text() + ', ';\n    ele.click();\n  });\n  cy.get('h5').eq(4).then(function (ele) {\n    roomName += ele.text();\n    ele.click();\n  });\n}).then(function () {\n  cy.log(roomName);\n  cy.get(\"div[class^='AddDirectMessage'] button.ant-btn\").click();\n  cy.get(\"a[class^='ChannelMenu-module_menuItem'].active\").should('be.visible');\n  cy.get(\"a[class^='ChannelMenu-module_menuItem'].active>span\").should('contain.text', roomName);\n  cy.get(\"a[class^='ChannelMenu-module_menuItem'].active\").trigger('mouseover');\n  cy.get('div.ant-tooltip').not('.ant-tooltip-hidden').find('.ant-tooltip-inner').should('contain.text', roomName).should('not.contain.text', Cypress.env('company_admin_name'));\n});",
+              "err": {},
+              "uuid": "5ef0fe62-fa0e-4fc6-8c3d-d2943860cea2",
+              "parentUUID": "81c4982e-3c16-450b-9f4a-c850c41b5b30",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "Direct message to multiple company users and single candidate",
+              "fullTitle": "Company Direct Message Direct message to multiple company users and single candidate",
+              "timedOut": null,
+              "duration": 17965,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.server();\ncy.route('GET', '**/v1/drafts').as('login');\ncy.route('GET', '**/v1/rooms?**').as('room');\ncy.route('GET', '**/v1/rooms/**').as('roomCreated');\ncy.loginCompany(Cypress.env('company_admin'), Cypress.env('company_admin_password'));\ncy.wait('@login', {\n  timeout: 60000\n}).its('status').should('equal', 200);\ncy.wait('@room', {\n  timeout: 60000\n}).its('status').should('equal', 200);\ncy.get(\"div[class^='DirectMessageMenu']\").click();\ncy.get(\"div[role='tab']\").contains('Company Users').click();\nvar roomName = '';\ncy.get(\".ant-tabs-tabpane-active div[class^='Candidate_avatar'] ~ div\").within(function () {\n  cy.get('h5').eq(0).then(function (ele) {\n    roomName = ele.text() + ', ';\n    ele.click();\n  });\n  cy.get('h5').eq(1).then(function (ele) {\n    roomName += ele.text() + ', ';\n    ele.click();\n  });\n  cy.get('h5').eq(2).then(function (ele) {\n    roomName += ele.text() + ', ';\n    ele.click();\n  });\n  cy.get('h5').eq(3).then(function (ele) {\n    roomName += ele.text() + ', ';\n    ele.click();\n  });\n  cy.get('h5').eq(4).then(function (ele) {\n    roomName += ele.text() + ', ';\n    ele.click();\n  });\n});\ncy.get(\"div[role='tab']\").contains('Candidates').click();\ncy.get(\".ant-tabs-tabpane-active div[class^='Candidate_avatar'] ~ div\").within(function () {\n  cy.get('h5').eq(0).then(function (ele) {\n    ele.click();\n  });\n  cy.get('h5').eq(1).then(function (ele) {\n    roomName += ele.text();\n    ele.click();\n  });\n}).then(function () {\n  cy.get('.ant-select-selection .ant-select-selection__choice').should('have.length', 6);\n  cy.get(\"div[class^='AddDirectMessage'] button.ant-btn\").click();\n  cy.wait('@roomCreated', {\n    timeout: 60000\n  }).its('status').should('equal', 200);\n  cy.get(\"a[class^='ChannelMenu-module_menuItem'].active>span\").should('contain.text', roomName);\n});",
+              "err": {
+                "message": "CypressError: Timed out retrying: Expected to find element: '.ant-tabs-tabpane-active div[class^='Candidate_avatar'] ~ div', but never found it.",
+                "estack": "CypressError: Timed out retrying: Expected to find element: '.ant-tabs-tabpane-active div[class^='Candidate_avatar'] ~ div', but never found it.\n    at Object.cypressErr (http://localhost:3000/__cypress/runner/cypress_runner.js:86089:11)\n    at Object.throwErr (http://localhost:3000/__cypress/runner/cypress_runner.js:86044:18)\n    at Object.throwErrByPath (http://localhost:3000/__cypress/runner/cypress_runner.js:86076:17)\n    at retry (http://localhost:3000/__cypress/runner/cypress_runner.js:76759:16)\n    at onFailFn (http://localhost:3000/__cypress/runner/cypress_runner.js:65594:16)\n    at tryCatcher (http://localhost:3000/__cypress/runner/cypress_runner.js:120353:23)\n    at Promise._settlePromiseFromHandler (http://localhost:3000/__cypress/runner/cypress_runner.js:118289:31)\n    at Promise._settlePromise (http://localhost:3000/__cypress/runner/cypress_runner.js:118346:18)\n    at Promise._settlePromise0 (http://localhost:3000/__cypress/runner/cypress_runner.js:118391:10)\n    at Promise._settlePromises (http://localhost:3000/__cypress/runner/cypress_runner.js:118466:18)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueue (http://localhost:3000/__cypress/runner/cypress_runner.js:115078:16)\n    at Async../node_modules/bluebird/js/release/async.js.Async._drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:115088:10)\n    at Async.drainQueues (http://localhost:3000/__cypress/runner/cypress_runner.js:114962:14)",
+                "diff": null
+              },
+              "uuid": "462b2bed-8219-4c28-a948-8770f0f34062",
+              "parentUUID": "81c4982e-3c16-450b-9f4a-c850c41b5b30",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "5ef0fe62-fa0e-4fc6-8c3d-d2943860cea2"
+          ],
+          "failures": [
+            "462b2bed-8219-4c28-a948-8770f0f34062"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 35216,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "5.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false
+      },
+      "version": "4.1.0"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports/separate-reports",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "4.1.0"
+    }
+  }
+}
